@@ -1,5 +1,10 @@
 # Changelog
 
+## 2.2.1
+
+- Update notifications in Magisk through `updateJson`. Install this version once by hand; later releases show up in Magisk.
+- Status log shows the installed version.
+
 ## 2.2
 
 - Status log per boot and a Magisk **Action** button that shows it with the current value.

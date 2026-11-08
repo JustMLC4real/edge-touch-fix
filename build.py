@@ -1,8 +1,13 @@
-"""Build the Magisk module ZIP into dist/ and run basic checks.
+"""Build the Magisk module ZIP into dist/, write update.json and run basic checks.
 
 Usage: python build.py
+
+Release flow: bump version/versionCode in module.prop, add a CHANGELOG entry,
+run this script, commit update.json, then publish a GitHub release tagged
+v<version> with the ZIP from dist/.
 """
 import hashlib
+import json
 import shutil
 import subprocess
 import sys
@@ -20,7 +25,9 @@ FILES = [
     "LICENSE",
 ]
 SCRIPTS = [f for f in FILES if f.endswith(".sh") or f.endswith("update-binary")]
-REQUIRED_PROPS = {"id", "name", "version", "versionCode", "author", "description"}
+REQUIRED_PROPS = {"id", "name", "version", "versionCode", "author", "description", "updateJson"}
+REPO = "JustMLC4real/edge-touch-fix"
+UPDATE_JSON_URL = f"https://raw.githubusercontent.com/{REPO}/main/update.json"
 
 
 def fail(message: str) -> None:
@@ -44,6 +51,12 @@ def main() -> None:
         fail(f"module.prop is missing {sorted(missing)}")
     if props["id"] != "edge_touch_fix":
         fail("module id changed; Magisk would treat it as a different module")
+    if props["updateJson"] != UPDATE_JSON_URL:
+        fail(f"updateJson must be {UPDATE_JSON_URL}")
+    if not props["versionCode"].isdigit():
+        fail("versionCode must be a whole number")
+    if f"## {props['version']}" not in (ROOT / "CHANGELOG.md").read_text(encoding="utf-8"):
+        fail(f"CHANGELOG.md has no '## {props['version']}' entry")
 
     sh = shutil.which("sh")
     if sh:
@@ -64,8 +77,17 @@ def main() -> None:
             info.external_attr = (0o755 if name in SCRIPTS else 0o644) << 16
             z.writestr(info, (ROOT / name).read_bytes())
 
+    update = {
+        "version": props["version"],
+        "versionCode": int(props["versionCode"]),
+        "zipUrl": f"https://github.com/{REPO}/releases/download/v{props['version']}/{out.name}",
+        "changelog": f"https://raw.githubusercontent.com/{REPO}/main/CHANGELOG.md",
+    }
+    (ROOT / "update.json").write_text(json.dumps(update, indent=2) + "\n", encoding="utf-8", newline="\n")
+
     digest = hashlib.sha256(out.read_bytes()).hexdigest()
     print(f"OK: {out.relative_to(ROOT)}")
+    print(f"OK: update.json -> v{props['version']} ({props['versionCode']})")
     print(f"SHA-256: {digest}")
 
 

@@ -14,7 +14,7 @@ Once per boot, the module turns this edge suppression off in the Goodix touch dr
 2. **Magisk → Modules → Install from storage**.
 3. Reboot.
 
-Tap **Action** on the module in Magisk to see whether it was applied.
+Tap **Action** on the module in Magisk to see whether it was applied. New releases show up as an update in Magisk (from 2.2.1 on).
 
 ## Uninstall
 

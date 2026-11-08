@@ -16,7 +16,7 @@ WANT="0 1"
 WANT_READ="0x00 0x80"
 
 exec > "$LOG" 2>&1
-echo "Edge Touch Fix 2.2 - $(date '+%Y-%m-%d %H:%M:%S')"
+echo "Edge Touch Fix $(grep -m1 '^version=' "$MODDIR/module.prop" | cut -d= -f2) - $(date '+%Y-%m-%d %H:%M:%S')"
 
 n=0
 until [ "$(getprop sys.boot_completed)" = 1 ]; do
