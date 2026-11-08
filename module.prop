@@ -1,0 +1,6 @@
+id=edge_touch_fix
+name=Edge Touch Fix
+version=2.2
+versionCode=4
+author=JustMLC
+description=Turns off Goodix edge/corner touch suppression on the Motorola Edge 70 Pro (merc) once at boot. No background service.
