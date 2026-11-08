@@ -22,6 +22,6 @@ Disable or remove the module in Magisk and reboot. Motorola's default behaviour 
 
 ## Good to know
 
-- Edge palm protection is off, so a hand resting on the screen edge can register as a touch.
+- Edge suppression is off, so a hand resting on the screen edge may register as a touch. Palm rejection for large contact areas (such as in Moto Gametime) stays on.
 - Only tested on the Edge 70 Pro with Android 17. The installer refuses other devices.
 - If a future update changes the touch driver, the module does nothing and shows why under **Action**.
